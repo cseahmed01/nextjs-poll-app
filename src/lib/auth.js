@@ -34,6 +34,14 @@ export const authOptions = {
       if (token) {
         session.user.id = parseInt(token.sub)
         session.user.role = token.role
+        // Include profile image from database if not already set
+        if (!session.user.image) {
+          const user = await prisma.user.findUnique({
+            where: { id: parseInt(token.sub) },
+            select: { profileImage: true }
+          })
+          session.user.image = user?.profileImage || null
+        }
       }
       return session
     },

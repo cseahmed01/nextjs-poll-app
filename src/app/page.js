@@ -79,6 +79,17 @@ export default function Home() {
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
                     className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
                   >
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold overflow-hidden">
+                      {session.user.image ? (
+                        <img
+                          src={session.user.image}
+                          alt="Profile"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span>{session.user.name ? session.user.name.charAt(0).toUpperCase() : 'U'}</span>
+                      )}
+                    </div>
                     <span>{session.user.name}</span>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -86,6 +97,10 @@ export default function Home() {
                   </button>
                   {userMenuOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border">
+                      <a href="/profile" className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <span>👤</span>
+                        <span>Profile</span>
+                      </a>
                       <a href="/dashboard" className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         <span>📊</span>
                         <span>Dashboard</span>
@@ -247,7 +262,7 @@ export default function Home() {
               {session ? 'Be the first to create a poll!' : 'Login to create your first poll.'}
             </p>
             {session && (
-              <a href="/dashboard" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+              <a href="/dashboard" className="bg-gray-100 text-gray-800 px-6 py-2 rounded hover:bg-gray-200 border border-gray-300">
                 ➕ Create Poll
               </a>
             )}

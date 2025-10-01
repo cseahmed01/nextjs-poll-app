@@ -98,14 +98,19 @@ export default function CommentSection({ pollId, comments = [], onCommentAdded }
       return name ? name.charAt(0).toUpperCase() : 'U'
     }
 
+    // Use current user's profile image from session for their own comments
+    const profileImage = (comment.user.id === session?.user?.id && session?.user?.image)
+      ? session.user.image
+      : comment.user.profileImage
+
     return (
       <div className={`${isReply ? 'ml-8 mt-4' : 'mb-6'} bg-white rounded-lg p-4 shadow-sm`}>
         <div className="flex justify-between items-start mb-2">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold overflow-hidden">
-              {comment.user.profileImage ? (
+              {profileImage ? (
                 <img
-                  src={comment.user.profileImage}
+                  src={profileImage}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />

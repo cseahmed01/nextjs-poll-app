@@ -51,7 +51,7 @@ export default function Profile() {
         setMessage('Profile image updated successfully!')
         setProfileImage(data.imageUrl)
         // Update session to reflect new image
-        await update()
+        await update({ image: data.imageUrl })
       } else {
         setMessage(data.error || 'Upload failed')
       }

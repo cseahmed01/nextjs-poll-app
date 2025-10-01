@@ -389,7 +389,7 @@ export default function Dashboard() {
             <h2 className="text-2xl font-bold text-gray-800">Create New Poll</h2>
             <button
               onClick={showCreateForm ? cancelEdit : () => setShowCreateForm(true)}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+              className="bg-gray-100 text-gray-800 px-4 py-2 rounded hover:bg-gray-200 border border-gray-300"
             >
               {showCreateForm ? '❌ Cancel' : '➕ New Poll'}
             </button>
@@ -557,7 +557,7 @@ export default function Dashboard() {
 
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                  className="w-full bg-gray-100 text-gray-800 py-2 px-4 rounded hover:bg-gray-200 border border-gray-300"
                 >
                   {editingPoll ? 'Update Poll' : 'Create Poll'}
                 </button>
@@ -572,7 +572,7 @@ export default function Dashboard() {
             <h2 className="text-2xl font-bold text-gray-800">Your Polls</h2>
             <button
               onClick={() => setShowCreateForm(true)}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+              className="bg-gray-100 text-gray-800 px-4 py-2 rounded hover:bg-gray-200 border border-gray-300"
             >
               ➕ New Poll
             </button>
@@ -585,7 +585,7 @@ export default function Dashboard() {
               <p className="text-gray-600 mb-6">Create your first poll to get started!</p>
               <button
                 onClick={() => setShowCreateForm(true)}
-                className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+                className="bg-gray-100 text-gray-800 px-6 py-2 rounded hover:bg-gray-200 border border-gray-300"
               >
                 Create Your First Poll
               </button>
