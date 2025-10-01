@@ -1,103 +1,198 @@
-import Image from "next/image";
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useSession, signOut } from 'next-auth/react'
+import PollCard from '@/components/PollCard'
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { data: session } = useSession()
+  const [polls, setPolls] = useState([])
+  const [filteredPolls, setFilteredPolls] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState('ALL')
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const fetchPolls = async () => {
+    const res = await fetch('/api/polls')
+    if (res.ok) {
+      const data = await res.json()
+      setPolls(data)
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    fetchPolls()
+  }, [])
+
+  useEffect(() => {
+    if (selectedCategory === 'ALL') {
+      setFilteredPolls(polls)
+    } else {
+      setFilteredPolls(polls.filter(poll => poll.category === selectedCategory))
+    }
+  }, [polls, selectedCategory])
+
+  useEffect(() => {
+    const handleClickOutside = () => setUserMenuOpen(false)
+    if (userMenuOpen) {
+      document.addEventListener('click', handleClickOutside)
+      return () => document.removeEventListener('click', handleClickOutside)
+    }
+  }, [userMenuOpen])
+
+  if (loading) return <div className="text-center mt-10">Loading...</div>
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+                <span className="text-white text-sm font-bold">P</span>
+              </div>
+              <h1 className="text-xl font-bold text-gray-900">PollHub</h1>
+            </div>
+            <div className="flex items-center space-x-4">
+              {session ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+                  >
+                    <span>{session.user.name}</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {userMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border">
+                      <a href="/dashboard" className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <span>📊</span>
+                        <span>Dashboard</span>
+                      </a>
+                      <button onClick={() => signOut()} className="flex items-center space-x-2 w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                        <span>🚪</span>
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <a href="/login" className="text-gray-700 hover:text-blue-600">
+                    🔐 Login
+                  </a>
+                  <a href="/signup" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    ✏️ Sign Up
+                  </a>
+                </>
+              )}
+            </div>
+          </div>
         </div>
+      </header>
+
+      <main className="max-w-4xl mx-auto px-4 py-8">
+        {/* Category Filter */}
+        <div className="mb-8">
+          <div className="flex flex-wrap gap-2 justify-center">
+            <button
+              onClick={() => setSelectedCategory('ALL')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedCategory === 'ALL'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              📊 All
+            </button>
+            <button
+              onClick={() => setSelectedCategory('GENERAL')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedCategory === 'GENERAL'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              📊 General
+            </button>
+            <button
+              onClick={() => setSelectedCategory('SPORTS')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedCategory === 'SPORTS'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              ⚽ Sports
+            </button>
+            <button
+              onClick={() => setSelectedCategory('POLITICS')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedCategory === 'POLITICS'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              🏛️ Politics
+            </button>
+            <button
+              onClick={() => setSelectedCategory('ENTERTAINMENT')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedCategory === 'ENTERTAINMENT'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              🎬 Entertainment
+            </button>
+            <button
+              onClick={() => setSelectedCategory('TECHNOLOGY')}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                selectedCategory === 'TECHNOLOGY'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              💻 Technology
+            </button>
+          </div>
+        </div>
+
+        {polls.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">📊</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">No polls yet</h2>
+            <p className="text-gray-600 mb-6">
+              {session ? 'Be the first to create a poll!' : 'Login to create your first poll.'}
+            </p>
+            {session && (
+              <a href="/dashboard" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                ➕ Create Poll
+              </a>
+            )}
+          </div>
+        ) : (
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              {selectedCategory === 'ALL' ? 'Latest Polls' : `${selectedCategory.charAt(0) + selectedCategory.slice(1).toLowerCase()} Polls`}
+            </h2>
+            {filteredPolls.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-4xl mb-4">🔍</div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">No polls found</h3>
+                <p className="text-gray-600">Try selecting a different category or create the first poll in this category!</p>
+              </div>
+            ) : (
+              filteredPolls.map(poll => (
+                <PollCard key={poll.id} poll={poll} onVote={fetchPolls} />
+              ))
+            )}
+          </div>
+        )}
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
-  );
+  )
 }
