@@ -93,15 +93,31 @@ export default function CommentSection({ pollId, comments = [], onCommentAdded }
     }
   }
 
-  const CommentItem = ({ comment, isReply = false }) => (
-    <div className={`${isReply ? 'ml-8 mt-4' : 'mb-6'} bg-white rounded-lg p-4 shadow-sm`}>
-      <div className="flex justify-between items-start mb-2">
-        <div className="flex items-center space-x-2">
-          <span className="font-semibold text-gray-900">{comment.user.name}</span>
-          <span className="text-sm text-gray-500">
-            {new Date(comment.createdAt).toLocaleDateString()}
-          </span>
-        </div>
+  const CommentItem = ({ comment, isReply = false }) => {
+    const getUserInitial = (name) => {
+      return name ? name.charAt(0).toUpperCase() : 'U'
+    }
+
+    return (
+      <div className={`${isReply ? 'ml-8 mt-4' : 'mb-6'} bg-white rounded-lg p-4 shadow-sm`}>
+        <div className="flex justify-between items-start mb-2">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold overflow-hidden">
+              {comment.user.profileImage ? (
+                <img
+                  src={comment.user.profileImage}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                getUserInitial(comment.user.name)
+              )}
+            </div>
+            <span className="font-semibold text-gray-900">{comment.user.name}</span>
+            <span className="text-sm text-gray-500">
+              {new Date(comment.createdAt).toLocaleDateString()}
+            </span>
+          </div>
         {session?.user?.role === 'ADMIN' && (
           <button
             onClick={() => handleDeleteComment(comment.id)}
@@ -172,7 +188,8 @@ export default function CommentSection({ pollId, comments = [], onCommentAdded }
         <CommentItem key={reply.id} comment={reply} isReply={true} />
       ))}
     </div>
-  )
+    )
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">

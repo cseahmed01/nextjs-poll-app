@@ -18,17 +18,17 @@ export async function GET(request, { params }) {
       },
       include: {
         user: {
-          select: { id: true, name: true }
+          select: { id: true, name: true, profileImage: true }
         },
         replies: {
           include: {
             user: {
-              select: { id: true, name: true }
+              select: { id: true, name: true, profileImage: true }
             },
             replies: {
               include: {
                 user: {
-                  select: { id: true, name: true }
+                  select: { id: true, name: true, profileImage: true }
                 }
               }
             }
@@ -94,7 +94,7 @@ export async function POST(request, { params }) {
       },
       include: {
         user: {
-          select: { id: true, name: true }
+          select: { id: true, name: true, profileImage: true }
         }
       }
     })

@@ -269,11 +269,11 @@ export default function Home() {
                   <PollCard key={poll.id} poll={poll} onVote={() => fetchPolls()} />
                 ))}
                 {hasMore && (
-                  <div className="text-center mt-6">
+                  <div className="flex justify-center mt-6">
                     <button
                       onClick={loadMore}
                       disabled={loadingMore}
-                      className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center space-x-2"
+                      className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center space-x-2 min-w-[120px]"
                     >
                       {loadingMore && (
                         <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
