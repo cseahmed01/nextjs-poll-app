@@ -5,8 +5,11 @@ import { authOptions } from '@/lib/auth'
 
 const prisma = new PrismaClient()
 
-export async function GET() {
+export async function GET(request) {
   const now = new Date()
+  const { searchParams } = new URL(request.url)
+  const limit = parseInt(searchParams.get('limit')) || 1000
+  const offset = parseInt(searchParams.get('offset')) || 0
 
   const polls = await prisma.poll.findMany({
     where: {
@@ -27,7 +30,9 @@ export async function GET() {
     },
     orderBy: {
       createdAt: 'desc'
-    }
+    },
+    take: limit,
+    skip: offset
   })
 
   return NextResponse.json(polls)

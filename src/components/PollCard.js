@@ -67,11 +67,11 @@ export default function PollCard({ poll, onVote, showCommentsLink = true }) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-4">
+    <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4">
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
           <div className="flex items-center space-x-2 mb-2">
-            <h2 className="text-lg font-bold text-gray-900">{poll.title}</h2>
+            <h2 className="text-base sm:text-lg font-bold text-gray-900">{poll.title}</h2>
             {getStatusInfo() && (
               <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusInfo().color}`}>
                 {getStatusInfo().text}
@@ -107,7 +107,7 @@ export default function PollCard({ poll, onVote, showCommentsLink = true }) {
           )}
         </div>
         <div className="text-right ml-4">
-          <div className="text-xl font-bold text-blue-600">{totalVotes}</div>
+          <div className="text-lg sm:text-xl font-bold text-blue-600">{totalVotes}</div>
           <div className="text-xs text-gray-500">votes</div>
         </div>
       </div>
