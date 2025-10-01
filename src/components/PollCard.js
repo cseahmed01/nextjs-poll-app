@@ -74,8 +74,16 @@ export default function PollCard({ poll, onVote, showCommentsLink = true }) {
     <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4">
       {/* Header with user info - Facebook style */}
       <div className="flex items-center space-x-3 mb-4">
-        <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-          {getUserInitial(poll.createdBy.name)}
+        <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm overflow-hidden">
+          {poll.createdBy.profileImage ? (
+            <img
+              src={poll.createdBy.profileImage}
+              alt={poll.createdBy.name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            getUserInitial(poll.createdBy.name)
+          )}
         </div>
         <div className="flex-1">
           <div className="flex items-center space-x-2">

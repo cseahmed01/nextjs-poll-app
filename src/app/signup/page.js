@@ -7,6 +7,7 @@ export default function Signup() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [profileImage, setProfileImage] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -16,21 +17,46 @@ export default function Signup() {
     setError('')
     setLoading(true)
 
-    const res = await fetch('/api/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password })
-    })
+    try {
+      // Create account first
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      })
 
-    if (res.ok) {
-      router.push('/login')
-    } else {
-      try {
+      if (!res.ok) {
         const data = await res.json()
         setError(data.error || 'An error occurred')
-      } catch {
-        setError('Server error')
+        setLoading(false)
+        return
       }
+
+      // If profile image was provided, upload it
+      if (profileImage) {
+        // Login first to get session
+        const loginRes = await fetch('/api/auth/callback/credentials', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        })
+
+        if (loginRes.ok) {
+          // Upload profile image
+          const formData = new FormData()
+          formData.append('profileImage', profileImage)
+
+          await fetch('/api/user/profile-image', {
+            method: 'POST',
+            body: formData
+          })
+          // Don't block on image upload failure
+        }
+      }
+
+      router.push('/login')
+    } catch (error) {
+      setError('Server error')
     }
     setLoading(false)
   }
@@ -94,6 +120,21 @@ export default function Signup() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                 required
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Profile Picture (Optional)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setProfileImage(e.target.files[0])}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Supported formats: JPEG, PNG, GIF. Max size: 5MB
+              </p>
             </div>
 
             <button

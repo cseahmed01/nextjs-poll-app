@@ -25,7 +25,7 @@ export async function GET(request) {
         }
       },
       createdBy: {
-        select: { name: true }
+        select: { name: true, profileImage: true }
       }
     },
     orderBy: {

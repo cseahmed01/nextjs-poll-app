@@ -30,15 +30,16 @@ enum Category {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String    @unique
-  password  String
-  role      Role      @default(USER)
-  polls     Poll[]
-  votes     Vote[]
-  comments  Comment[]
-  createdAt DateTime  @default(now())
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  password     String
+  profileImage String?   // URL to profile image
+  role         Role      @default(USER)
+  polls        Poll[]
+  votes        Vote[]
+  comments     Comment[]
+  createdAt    DateTime  @default(now())
 }
 
 model Poll {

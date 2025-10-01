@@ -22,6 +22,9 @@ export default function Dashboard() {
   const [scheduledAt, setScheduledAt] = useState('')
   const [options, setOptions] = useState(['', ''])
   const [error, setError] = useState('')
+  const [profileImage, setProfileImage] = useState('')
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [imageMessage, setImageMessage] = useState('')
 
   useEffect(() => {
     if (status === 'loading') return
@@ -195,6 +198,56 @@ export default function Dashboard() {
     }
   }
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+    if (!allowedTypes.includes(file.type)) {
+      setImageMessage('Invalid file type. Only JPEG, PNG, and GIF are allowed.')
+      return
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      setImageMessage('File size too large. Maximum 5MB allowed.')
+      return
+    }
+
+    setUploadingImage(true)
+    setImageMessage('')
+
+    const formData = new FormData()
+    formData.append('profileImage', file)
+
+    try {
+      const res = await fetch('/api/user/profile-image', {
+        method: 'POST',
+        body: formData
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        setImageMessage('Profile image updated successfully!')
+        setProfileImage(data.imageUrl)
+        // Update session to reflect new image
+        // Note: This would require updating the session callback in auth config
+      } else {
+        setImageMessage(data.error || 'Upload failed')
+      }
+    } catch (error) {
+      setImageMessage('Upload failed')
+    }
+
+    setUploadingImage(false)
+  }
+
+  const getUserInitial = (name) => {
+    return name ? name.charAt(0).toUpperCase() : 'U'
+  }
+
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
@@ -264,6 +317,67 @@ export default function Dashboard() {
               </div>
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
                 <span className="text-2xl">💬</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Profile Picture Section */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-800">Profile Picture</h2>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold overflow-hidden">
+                {profileImage || session?.user?.image ? (
+                  <img
+                    src={profileImage || session.user.image}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  getUserInitial(session?.user?.name)
+                )}
+              </div>
+
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-2">Update your profile picture</p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  disabled={uploadingImage}
+                  className="text-sm file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+                />
+              </div>
+            </div>
+
+            <div className="flex-1 text-center sm:text-left">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">{session?.user?.name}</h3>
+              <p className="text-gray-600 mb-4">Your profile picture will be displayed on all your polls and comments.</p>
+
+              {uploadingImage && (
+                <div className="flex items-center justify-center sm:justify-start space-x-2 text-blue-600 mb-4">
+                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Uploading...</span>
+                </div>
+              )}
+
+              {imageMessage && (
+                <div className={`text-sm mb-4 ${imageMessage.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
+                  {imageMessage}
+                </div>
+              )}
+
+              <div className="text-xs text-gray-500">
+                <p>• Supported formats: JPEG, PNG, GIF</p>
+                <p>• Maximum file size: 5MB</p>
+                <p>• Square images work best</p>
               </div>
             </div>
           </div>
