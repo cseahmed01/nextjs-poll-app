@@ -59,8 +59,6 @@ export default function Home() {
     }
   }, [userMenuOpen])
 
-  if (loading) return <div className="text-center mt-10">Loading...</div>
-
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow">
@@ -157,8 +155,17 @@ export default function Home() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 py-8">
-        {/* Category Filter */}
-        <div className="mb-8">
+        {loading ? (
+          <div className="min-h-[400px] bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading polls...</p>
+            </div>
+          </div>
+        ) : (
+          <div>
+            {/* Category Filter */}
+            <div className="mb-8">
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 max-w-4xl mx-auto">
             <button
               onClick={() => setSelectedCategory('ALL')}
@@ -333,7 +340,9 @@ export default function Home() {
             )}
           </div>
         )}
-      </main>
+        </div>
+        )}
+     </main>
     </div>
   )
 }
