@@ -35,6 +35,10 @@ model User {
   email        String    @unique
   password     String
   profileImage String?   // URL to profile image
+  bio          String?   // User biography
+  location     String?   // User location/city
+  website      String?   // Personal website URL
+  birthday     DateTime? // User's birthday
   role         Role      @default(USER)
   polls        Poll[]
   votes        Vote[]

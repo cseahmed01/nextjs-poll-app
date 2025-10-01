@@ -282,9 +282,81 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar Navigation */}
+          <aside className="lg:w-64 flex-shrink-0">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 sticky top-8">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
+              <div className="space-y-3">
+                <button
+                  onClick={() => setShowCreateForm(true)}
+                  className="w-full flex items-center space-x-3 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <span className="text-xl">➕</span>
+                  <span className="font-medium">Create New Poll</span>
+                </button>
+
+                <a
+                  href="/profile"
+                  className="w-full flex items-center space-x-3 px-4 py-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  <span className="text-xl">👤</span>
+                  <span className="font-medium">Edit Profile</span>
+                </a>
+
+                <a
+                  href="/"
+                  className="w-full flex items-center space-x-3 px-4 py-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  <span className="text-xl">📊</span>
+                  <span className="font-medium">Browse Polls</span>
+                </a>
+
+                <a
+                  href="/create-poll"
+                  className="w-full flex items-center space-x-3 px-4 py-3 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors"
+                >
+                  <span className="text-xl">🎯</span>
+                  <span className="font-medium">Advanced Poll Creator</span>
+                </a>
+              </div>
+
+              <div className="border-t border-gray-200 mt-6 pt-6">
+                <h4 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">Support</h4>
+                <div className="space-y-2">
+                  <button className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded transition-colors">
+                    📚 Help Center
+                  </button>
+                  <button className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded transition-colors">
+                    💬 Contact Support
+                  </button>
+                  <button className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded transition-colors">
+                    📖 User Guide
+                  </button>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-200 mt-6 pt-6">
+                <h4 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">Account</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Member since</span>
+                    <span className="font-medium">{new Date(data?.user?.createdAt).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Account type</span>
+                    <span className="font-medium capitalize">{session.user.role.toLowerCase()}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <div className="flex-1">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
@@ -319,6 +391,76 @@ export default function Dashboard() {
                 <span className="text-2xl">💬</span>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Quick Stats & Alerts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">📈 Performance Overview</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Average votes per poll</span>
+                <span className="font-medium">{data?.stats.totalPolls > 0 ? Math.round(data.stats.totalVotes / data.stats.totalPolls) : 0}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Average comments per poll</span>
+                <span className="font-medium">{data?.stats.totalPolls > 0 ? Math.round(data.stats.totalComments / data.stats.totalPolls) : 0}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Most active poll</span>
+                <span className="font-medium text-blue-600">View Details</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">🔔 Notifications</h3>
+            <div className="space-y-3">
+              <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-sm text-blue-800">Welcome to your dashboard! Create your first poll to get started.</p>
+              </div>
+              <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                <p className="text-sm text-green-800">Tip: Add a profile picture to increase engagement with your polls.</p>
+              </div>
+              <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <p className="text-sm text-yellow-800">Complete your profile to unlock all features.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Recent Activity</h2>
+          <div className="space-y-4">
+            {data?.polls?.slice(0, 3).map(poll => (
+              <div key={poll.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-blue-600 font-bold">📊</span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-800">{poll.title}</h4>
+                    <p className="text-sm text-gray-500">
+                      {poll.options.reduce((sum, opt) => sum + opt.votes.length, 0)} votes •
+                      {poll._count?.comments || 0} comments
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href={`/polls/${poll.id}`}
+                  className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                >
+                  View →
+                </a>
+              </div>
+            ))}
+            {(!data?.polls || data.polls.length === 0) && (
+              <div className="text-center py-8 text-gray-500">
+                <p>No recent activity yet. Create your first poll!</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -672,7 +814,42 @@ export default function Dashboard() {
               ))}
             </div>
           )}
+            </div>
+          </div>
         </div>
+
+        {/* Footer */}
+        <footer className="mt-12 bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <h4 className="font-semibold text-gray-800 mb-3">Quick Links</h4>
+              <div className="space-y-2">
+                <a href="/" className="block text-sm text-gray-600 hover:text-blue-600">Home</a>
+                <a href="/profile" className="block text-sm text-gray-600 hover:text-blue-600">My Profile</a>
+                <a href="/dashboard" className="block text-sm text-gray-600 hover:text-blue-600">Dashboard</a>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-800 mb-3">Support</h4>
+              <div className="space-y-2">
+                <button className="block text-sm text-gray-600 hover:text-blue-600">Help Center</button>
+                <button className="block text-sm text-gray-600 hover:text-blue-600">Contact Us</button>
+                <button className="block text-sm text-gray-600 hover:text-blue-600">Privacy Policy</button>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-800 mb-3">Account</h4>
+              <div className="space-y-2">
+                <button className="block text-sm text-gray-600 hover:text-blue-600">Settings</button>
+                <button className="block text-sm text-gray-600 hover:text-blue-600">Preferences</button>
+                <button onClick={() => signOut()} className="block text-sm text-red-600 hover:text-red-700">Sign Out</button>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-200 mt-6 pt-6 text-center">
+            <p className="text-sm text-gray-500">© 2024 PollHub. All rights reserved.</p>
+          </div>
+        </footer>
       </main>
     </div>
   )

@@ -66,20 +66,23 @@ export default function Home() {
       <header className="bg-white shadow">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2 sm:space-x-3">
+            <a
+              href="/"
+              className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity"
+            >
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-600 rounded flex items-center justify-center">
                 <span className="text-white text-xs sm:text-sm font-bold">P</span>
               </div>
               <h1 className="text-lg sm:text-xl font-bold text-gray-900">PollHub</h1>
-            </div>
+            </a>
             <div className="flex items-center space-x-2 sm:space-x-4">
               {session ? (
                 <div className="relative">
                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+                    className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 transition-colors duration-200 p-1 rounded-lg hover:bg-gray-50"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold overflow-hidden">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold overflow-hidden ring-2 ring-gray-200 hover:ring-blue-300 transition-all duration-200">
                       {session.user.image ? (
                         <img
                           src={session.user.image}
@@ -90,25 +93,51 @@ export default function Home() {
                         <span>{session.user.name ? session.user.name.charAt(0).toUpperCase() : 'U'}</span>
                       )}
                     </div>
-                    <span>{session.user.name}</span>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium text-sm">{session.user.name}</span>
+                      <span className="text-xs text-gray-500">Profile</span>
+                    </div>
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
                   {userMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border">
-                      <a href="/profile" className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <span>👤</span>
-                        <span>Profile</span>
-                      </a>
-                      <a href="/dashboard" className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <span>📊</span>
-                        <span>Dashboard</span>
-                      </a>
-                      <button onClick={() => signOut()} className="flex items-center space-x-2 w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                        <span>🚪</span>
-                        <span>Logout</span>
-                      </button>
+                    <div className="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
+                      <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold overflow-hidden">
+                            {session.user.image ? (
+                              <img
+                                src={session.user.image}
+                                alt="Profile"
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <span>{session.user.name ? session.user.name.charAt(0).toUpperCase() : 'U'}</span>
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-900">{session.user.name}</p>
+                            <p className="text-sm text-gray-500">{session.user.role === 'ADMIN' ? 'Administrator' : 'User'}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="py-2">
+                        <a href="/profile" className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                          <span>👤</span>
+                          <span>My Profile</span>
+                        </a>
+                        <a href="/dashboard" className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                          <span>📊</span>
+                          <span>Dashboard</span>
+                        </a>
+                        <div className="border-t border-gray-200 mt-2 pt-2">
+                          <button onClick={() => signOut()} className="flex items-center space-x-3 w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
+                            <span>🚪</span>
+                            <span>Sign Out</span>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>

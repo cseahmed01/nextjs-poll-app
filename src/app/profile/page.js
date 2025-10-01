@@ -10,11 +10,44 @@ export default function Profile() {
   const [profileImage, setProfileImage] = useState('')
   const [uploading, setUploading] = useState(false)
   const [message, setMessage] = useState('')
+  const [profileData, setProfileData] = useState({
+    name: '',
+    bio: '',
+    location: '',
+    website: '',
+    birthday: ''
+  })
+  const [updating, setUpdating] = useState(false)
+  const [profileMessage, setProfileMessage] = useState('')
 
   useEffect(() => {
     if (status === 'loading') return
     if (!session) router.push('/login')
   }, [session, status, router])
+
+  useEffect(() => {
+    if (session?.user) {
+      fetchProfileData()
+    }
+  }, [session])
+
+  const fetchProfileData = async () => {
+    try {
+      const res = await fetch('/api/user/profile')
+      if (res.ok) {
+        const data = await res.json()
+        setProfileData({
+          name: data.user.name || '',
+          bio: data.user.bio || '',
+          location: data.user.location || '',
+          website: data.user.website || '',
+          birthday: data.user.birthday ? new Date(data.user.birthday).toISOString().split('T')[0] : ''
+        })
+      }
+    } catch (error) {
+      console.error('Failed to fetch profile data:', error)
+    }
+  }
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0]
@@ -62,6 +95,36 @@ export default function Profile() {
     setUploading(false)
   }
 
+  const handleProfileUpdate = async (e) => {
+    e.preventDefault()
+    setUpdating(true)
+    setProfileMessage('')
+
+    try {
+      const res = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profileData)
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        setProfileMessage('Profile updated successfully!')
+        // Update session if name changed
+        if (profileData.name !== session.user.name) {
+          await update({ name: profileData.name })
+        }
+      } else {
+        setProfileMessage(data.error || 'Failed to update profile')
+      }
+    } catch (error) {
+      setProfileMessage('Failed to update profile')
+    }
+
+    setUpdating(false)
+  }
+
   const getUserInitial = (name) => {
     return name ? name.charAt(0).toUpperCase() : 'U'
   }
@@ -69,13 +132,29 @@ export default function Profile() {
   if (status === 'loading') return <div>Loading...</div>
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
-      <div className="max-w-md mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Your Profile</h1>
-            <p className="text-gray-600">Manage your account settings</p>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+                <span className="text-white text-sm font-bold">P</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">My Profile</h1>
+                <p className="text-sm text-gray-600">Welcome back, {session.user.name}!</p>
+              </div>
+            </div>
+            <a href="/dashboard" className="text-gray-700 hover:text-blue-600">
+              ← Back to Dashboard
+            </a>
           </div>
+        </div>
+      </header>
+
+      <main className="max-w-6xl mx-auto px-6 py-8">
+        <div className="max-w-md mx-auto">
+          <div className="bg-white rounded-2xl shadow-lg p-8">
 
           {/* Profile Image Section */}
           <div className="mb-8">
@@ -127,32 +206,115 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* User Info Section */}
+          {/* Profile Information Section */}
           <div className="border-t pt-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Account Information</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Name</label>
-                <p className="mt-1 text-gray-900">{session?.user?.name}</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Email</label>
-                <p className="mt-1 text-gray-900">{session?.user?.email}</p>
-              </div>
-            </div>
-          </div>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Profile Information</h2>
 
-          {/* Navigation */}
-          <div className="mt-8 pt-6 border-t text-center">
-            <a
-              href="/dashboard"
-              className="text-blue-600 hover:text-blue-800 font-medium"
-            >
-              ← Back to Dashboard
-            </a>
+            {profileMessage && (
+              <div className={`mb-4 text-sm ${profileMessage.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
+                {profileMessage}
+              </div>
+            )}
+
+            <form onSubmit={handleProfileUpdate} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={profileData.name}
+                  onChange={(e) => setProfileData({...profileData, name: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Bio
+                </label>
+                <textarea
+                  value={profileData.bio}
+                  onChange={(e) => setProfileData({...profileData, bio: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  placeholder="Tell us about yourself..."
+                  rows={3}
+                  maxLength={500}
+                />
+                <p className="text-xs text-gray-500 mt-1">{profileData.bio.length}/500 characters</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Location
+                  </label>
+                  <input
+                    type="text"
+                    value={profileData.location}
+                    onChange={(e) => setProfileData({...profileData, location: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="City, Country"
+                    maxLength={100}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Website
+                  </label>
+                  <input
+                    type="url"
+                    value={profileData.website}
+                    onChange={(e) => setProfileData({...profileData, website: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="https://yourwebsite.com"
+                    maxLength={200}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Birthday
+                </label>
+                <input
+                  type="date"
+                  value={profileData.birthday}
+                  onChange={(e) => setProfileData({...profileData, birthday: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  max={new Date().toISOString().split('T')[0]}
+                />
+                <p className="text-xs text-gray-500 mt-1">You must be at least 13 years old</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={session?.user?.email || ''}
+                  className="w-full px-3 py-2 border border-gray-300 rounded bg-gray-50 text-gray-500 cursor-not-allowed"
+                  disabled
+                />
+                <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+              </div>
+
+              <button
+                type="submit"
+                disabled={updating}
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
+              >
+                {updating ? 'Updating...' : 'Update Profile'}
+              </button>
+            </form>
           </div>
         </div>
       </div>
+      </main>
     </div>
   )
 }
