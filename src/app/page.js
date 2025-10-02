@@ -69,7 +69,8 @@ export default function Home() {
           <div className="flex justify-between items-center">
             <Link
               href="/"
-              className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity"
+              onClick={(e) => { e.preventDefault(); window.location.reload(); }}
+              className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
             >
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-600 rounded flex items-center justify-center">
                 <span className="text-white text-xs sm:text-sm font-bold">P</span>

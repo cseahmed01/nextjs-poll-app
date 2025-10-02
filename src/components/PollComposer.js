@@ -17,12 +17,12 @@ export default function PollComposer({ onPollCreated }) {
   return (
     <>
       <div className="bg-white rounded-xl shadow-lg border border-gray-200 mb-8 overflow-hidden">
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center space-x-4 cursor-pointer hover:bg-gray-50 p-4 rounded-lg transition-all duration-200 group"
+            className="flex items-center space-x-4 cursor-pointer hover:bg-gray-50 p-3 sm:p-4 rounded-lg transition-all duration-200 group"
           >
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 ring-2 ring-blue-100 group-hover:ring-blue-200 transition-all">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 ring-2 ring-blue-100 group-hover:ring-blue-200 transition-all">
               {session.user.image ? (
                 <img
                   src={session.user.image}
@@ -38,8 +38,8 @@ export default function PollComposer({ onPollCreated }) {
               <div className="text-gray-400 text-sm">Click to create a new poll</div>
             </div>
             <div className="flex items-center space-x-2 text-blue-600 group-hover:text-blue-700 transition-colors">
-              <span className="font-medium">Create Poll</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span className="font-medium hidden sm:inline">Create Poll</span>
+              <svg className="w-5 h-5 sm:w-5 sm:h-5 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
             </div>
