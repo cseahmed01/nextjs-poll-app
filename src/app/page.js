@@ -82,7 +82,7 @@ export default function Home() {
                 <div className="relative">
                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center space-x-3 text-gray-700 hover:text-blue-600 transition-colors duration-200 p-1 rounded-lg hover:bg-gray-50"
+                    className="border-1 border  flex items-center space-x-3 text-gray-700 hover:text-blue-600 transition-colors duration-200 p-1 rounded-lg hover:bg-gray-200"
                   >
                     <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold overflow-hidden ring-2 ring-gray-200 hover:ring-blue-300 transition-all duration-200">
                       {session.user.image ? (
@@ -174,127 +174,147 @@ export default function Home() {
           <div>
             {/* Category Filter */}
             <div className="mb-8">
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 max-w-4xl mx-auto">
-            <button
-              onClick={() => setSelectedCategory('ALL')}
-              className={`w-full px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                selectedCategory === 'ALL'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              📊 All
-            </button>
-            <button
-              onClick={() => setSelectedCategory('GENERAL')}
-              className={`w-full px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                selectedCategory === 'GENERAL'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              📊 General
-            </button>
-            <button
-              onClick={() => setSelectedCategory('SPORTS')}
-              className={`w-full px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                selectedCategory === 'SPORTS'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              ⚽ Sports
-            </button>
-            <button
-              onClick={() => setSelectedCategory('POLITICS')}
-              className={`w-full px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                selectedCategory === 'POLITICS'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              🏛️ Politics
-            </button>
-            <button
-              onClick={() => setSelectedCategory('ENTERTAINMENT')}
-              className={`w-full px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                selectedCategory === 'ENTERTAINMENT'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              🎬 Entertainment
-            </button>
-            <button
-              onClick={() => setSelectedCategory('TECHNOLOGY')}
-              className={`w-full px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                selectedCategory === 'TECHNOLOGY'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              💻 Technology
-            </button>
-            <button
-              onClick={() => setSelectedCategory('EDUCATION')}
-              className={`w-full px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                selectedCategory === 'EDUCATION'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              📚 Education
-            </button>
-            <button
-              onClick={() => setSelectedCategory('HEALTH')}
-              className={`w-full px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                selectedCategory === 'HEALTH'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              🏥 Health
-            </button>
-            <button
-              onClick={() => setSelectedCategory('BUSINESS')}
-              className={`w-full px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                selectedCategory === 'BUSINESS'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              💼 Business
-            </button>
-            <button
-              onClick={() => setSelectedCategory('TRAVEL')}
-              className={`w-full px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                selectedCategory === 'TRAVEL'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              ✈️ Travel
-            </button>
-            <button
-              onClick={() => setSelectedCategory('FOOD')}
-              className={`w-full px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                selectedCategory === 'FOOD'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              🍕 Food
-            </button>
-            <button
-              onClick={() => setSelectedCategory('OTHER')}
-              className={`w-full px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
-                selectedCategory === 'OTHER'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              🔸 Other
-            </button>
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => document.getElementById('category-scroll').scrollLeft -= 200}
+                className="flex-shrink-0 p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+              >
+                <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <div id="category-scroll" className="flex space-x-2 overflow-x-auto scrollbar-hide pb-2 flex-1">
+                <button
+                  onClick={() => setSelectedCategory('ALL')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedCategory === 'ALL'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  📊 All
+                </button>
+                <button
+                  onClick={() => setSelectedCategory('GENERAL')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedCategory === 'GENERAL'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  📊 General
+                </button>
+                <button
+                  onClick={() => setSelectedCategory('SPORTS')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedCategory === 'SPORTS'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  ⚽ Sports
+                </button>
+                <button
+                  onClick={() => setSelectedCategory('POLITICS')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedCategory === 'POLITICS'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🏛️ Politics
+                </button>
+                <button
+                  onClick={() => setSelectedCategory('ENTERTAINMENT')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedCategory === 'ENTERTAINMENT'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🎬 Entertainment
+                </button>
+                <button
+                  onClick={() => setSelectedCategory('TECHNOLOGY')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedCategory === 'TECHNOLOGY'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  💻 Technology
+                </button>
+                <button
+                  onClick={() => setSelectedCategory('EDUCATION')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedCategory === 'EDUCATION'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  📚 Education
+                </button>
+                <button
+                  onClick={() => setSelectedCategory('HEALTH')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedCategory === 'HEALTH'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🏥 Health
+                </button>
+                <button
+                  onClick={() => setSelectedCategory('BUSINESS')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedCategory === 'BUSINESS'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  💼 Business
+                </button>
+                <button
+                  onClick={() => setSelectedCategory('TRAVEL')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedCategory === 'TRAVEL'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  ✈️ Travel
+                </button>
+                <button
+                  onClick={() => setSelectedCategory('FOOD')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedCategory === 'FOOD'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🍕 Food
+                </button>
+                <button
+                  onClick={() => setSelectedCategory('OTHER')}
+                  className={`flex-shrink-0 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                    selectedCategory === 'OTHER'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🔸 Other
+                </button>
+              </div>
+              <button
+                onClick={() => document.getElementById('category-scroll').scrollLeft += 200}
+                className="flex-shrink-0 p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+              >
+                <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
