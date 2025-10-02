@@ -57,12 +57,28 @@ export async function POST(request, { params }) {
     return NextResponse.json({ error: 'Already voted on this poll' }, { status: 400 })
   }
 
-  // Create vote
-  const vote = await prisma.vote.create({
-    data: {
-      userId: session.user.id,
-      pollOptionId: optionId
+  // Create vote with transaction to handle race conditions
+  const vote = await prisma.$transaction(async (tx) => {
+    // Double-check within transaction
+    const doubleCheckVote = await tx.vote.findFirst({
+      where: {
+        userId: session.user.id,
+        pollOption: {
+          pollId: pollId
+        }
+      }
+    })
+
+    if (doubleCheckVote) {
+      throw new Error('Already voted on this poll')
     }
+
+    return await tx.vote.create({
+      data: {
+        userId: session.user.id,
+        pollOptionId: optionId
+      }
+    })
   })
 
   return NextResponse.json({ message: 'Vote recorded', vote })

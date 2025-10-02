@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import PollCard from '@/components/PollCard'
+import PollComposer from '@/components/PollComposer'
 
 export default function Home() {
   const { data: session } = useSession()
@@ -289,6 +290,9 @@ export default function Home() {
             </button>
           </div>
         </div>
+
+        {/* Poll Composer */}
+        <PollComposer onPollCreated={() => fetchPolls(5, 0)} />
 
         {polls.length === 0 ? (
           <div className="text-center py-12">
