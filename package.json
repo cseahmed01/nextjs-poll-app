@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "clear-cache": "rm -rf .next && rm -rf node_modules && npm install"
+    "clear-cache": "rm -rf .next && rm -rf node_modules && npm install",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "react": "19.1.0",
