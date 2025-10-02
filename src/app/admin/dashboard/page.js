@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function AdminDashboard() {
   const { data: session, status } = useSession()
@@ -118,9 +119,9 @@ export default function AdminDashboard() {
                 <p className="text-sm text-gray-600">Manage polls and users</p>
               </div>
             </div>
-            <a href="/" className="text-gray-700 hover:text-blue-600">
+            <Link href="/" className="text-gray-700 hover:text-blue-600">
               ← Back to Feed
-            </a>
+            </Link>
           </div>
         </div>
       </header>
@@ -148,13 +149,13 @@ export default function AdminDashboard() {
                   <span className="font-medium">Manage Users</span>
                 </button>
 
-                <a
+                <Link
                   href="/"
                   className="w-full flex items-center space-x-3 px-4 py-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors"
                 >
                   <span className="text-xl">🏠</span>
                   <span className="font-medium">View Site</span>
-                </a>
+                </Link>
               </div>
 
               <div className="border-t border-gray-200 mt-6 pt-6">

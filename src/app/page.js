@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useSession, signOut } from 'next-auth/react'
+import Link from 'next/link'
+import Image from 'next/image'
 import PollCard from '@/components/PollCard'
 import PollComposer from '@/components/PollComposer'
 
@@ -65,7 +67,7 @@ export default function Home() {
       <header className="bg-white shadow">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex justify-between items-center">
-            <a
+            <Link
               href="/"
               className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity"
             >
@@ -73,7 +75,7 @@ export default function Home() {
                 <span className="text-white text-xs sm:text-sm font-bold">P</span>
               </div>
               <h1 className="text-lg sm:text-xl font-bold text-gray-900">PollHub</h1>
-            </a>
+            </Link>
             <div className="flex items-center space-x-2 sm:space-x-4">
               {session ? (
                 <div className="relative">
@@ -83,9 +85,11 @@ export default function Home() {
                   >
                     <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold overflow-hidden ring-2 ring-gray-200 hover:ring-blue-300 transition-all duration-200">
                       {session.user.image ? (
-                        <img
+                        <Image
                           src={session.user.image}
                           alt="Profile"
+                          width={48}
+                          height={48}
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -106,9 +110,11 @@ export default function Home() {
                         <div className="flex items-center space-x-3">
                           <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold overflow-hidden">
                             {session.user.image ? (
-                              <img
+                              <Image
                                 src={session.user.image}
                                 alt="Profile"
+                                width={40}
+                                height={40}
                                 className="w-full h-full object-cover"
                               />
                             ) : (
@@ -122,14 +128,14 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="py-2">
-                        <a href="/profile" className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                        <Link href="/profile" className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors">
                           <span>👤</span>
                           <span>My Profile</span>
-                        </a>
-                        <a href="/dashboard" className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                        </Link>
+                        <Link href="/dashboard" className="flex items-center space-x-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors">
                           <span>📊</span>
                           <span>Dashboard</span>
-                        </a>
+                        </Link>
                         <div className="border-t border-gray-200 mt-2 pt-2">
                           <button onClick={() => signOut()} className="flex items-center space-x-3 w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
                             <span>🚪</span>
@@ -142,12 +148,12 @@ export default function Home() {
                 </div>
               ) : (
                 <>
-                  <a href="/login" className="text-gray-700 hover:text-blue-600 text-sm sm:text-base">
+                  <Link href="/login" className="text-gray-700 hover:text-blue-600 text-sm sm:text-base">
                     🔐 Login
-                  </a>
-                  <a href="/signup" className="bg-blue-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded hover:bg-blue-700 text-sm sm:text-base">
+                  </Link>
+                  <Link href="/signup" className="bg-blue-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded hover:bg-blue-700 text-sm sm:text-base">
                     ✏️ Sign Up
-                  </a>
+                  </Link>
                 </>
               )}
             </div>
@@ -302,9 +308,9 @@ export default function Home() {
               {session ? 'Be the first to create a poll!' : 'Login to create your first poll.'}
             </p>
             {session && (
-              <a href="/dashboard" className="bg-gray-100 text-gray-800 px-6 py-2 rounded hover:bg-gray-200 border border-gray-300">
+              <Link href="/dashboard" className="bg-gray-100 text-gray-800 px-6 py-2 rounded hover:bg-gray-200 border border-gray-300">
                 ➕ Create Poll
-              </a>
+              </Link>
             )}
           </div>
         ) : (

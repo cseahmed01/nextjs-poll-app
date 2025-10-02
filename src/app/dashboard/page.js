@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import Image from 'next/image'
 import PollCard from '@/components/PollCard'
 import { pollTemplates, getTemplateById } from '@/lib/pollTemplates'
 
@@ -275,9 +277,9 @@ export default function Dashboard() {
                 <p className="text-sm text-gray-600">Welcome back, {session.user.name}!</p>
               </div>
             </div>
-            <a href="/" className="text-gray-700 hover:text-blue-600">
+            <Link href="/" className="text-gray-700 hover:text-blue-600">
               ← Back to Feed
-            </a>
+            </Link>
           </div>
         </div>
       </header>
@@ -297,29 +299,29 @@ export default function Dashboard() {
                   <span className="font-medium">Create New Poll</span>
                 </button>
 
-                <a
+                <Link
                   href="/profile"
                   className="w-full flex items-center space-x-3 px-4 py-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors"
                 >
                   <span className="text-xl">👤</span>
                   <span className="font-medium">Edit Profile</span>
-                </a>
+                </Link>
 
-                <a
+                <Link
                   href="/"
                   className="w-full flex items-center space-x-3 px-4 py-3 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition-colors"
                 >
                   <span className="text-xl">📊</span>
                   <span className="font-medium">Browse Polls</span>
-                </a>
+                </Link>
 
-                <a
+                <Link
                   href="/create-poll"
                   className="w-full flex items-center space-x-3 px-4 py-3 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors"
                 >
                   <span className="text-xl">🎯</span>
                   <span className="font-medium">Advanced Poll Creator</span>
-                </a>
+                </Link>
               </div>
 
               <div className="border-t border-gray-200 mt-6 pt-6">
@@ -448,12 +450,12 @@ export default function Dashboard() {
                     </p>
                   </div>
                 </div>
-                <a
+                <Link
                   href={`/polls/${poll.id}`}
                   className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                 >
                   View →
-                </a>
+                </Link>
               </div>
             ))}
             {(!data?.polls || data.polls.length === 0) && (
@@ -474,9 +476,11 @@ export default function Dashboard() {
             <div className="flex flex-col items-center space-y-4">
               <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold overflow-hidden">
                 {profileImage || session?.user?.image ? (
-                  <img
+                  <Image
                     src={profileImage || session.user.image}
                     alt="Profile"
+                    width={80}
+                    height={80}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -824,9 +828,9 @@ export default function Dashboard() {
             <div>
               <h4 className="font-semibold text-gray-800 mb-3">Quick Links</h4>
               <div className="space-y-2">
-                <a href="/" className="block text-sm text-gray-600 hover:text-blue-600">Home</a>
-                <a href="/profile" className="block text-sm text-gray-600 hover:text-blue-600">My Profile</a>
-                <a href="/dashboard" className="block text-sm text-gray-600 hover:text-blue-600">Dashboard</a>
+                <Link href="/" className="block text-sm text-gray-600 hover:text-blue-600">Home</Link>
+                <Link href="/profile" className="block text-sm text-gray-600 hover:text-blue-600">My Profile</Link>
+                <Link href="/dashboard" className="block text-sm text-gray-600 hover:text-blue-600">Dashboard</Link>
               </div>
             </div>
             <div>
